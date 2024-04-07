@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ServerApi.DTOs;
 using WorldCitiesModel;
 
 namespace ServerApi.Controllers;
@@ -10,8 +11,18 @@ public class CitiesController(WorldCitiesContext context) : ControllerBase
 {
     // GET: api/Cities
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<City>>> GetCities() => 
-        await context.Cities.Take(100).ToListAsync();
+    public async Task<ActionResult<IEnumerable<CityDto>>> GetCities()
+    {
+        IQueryable<CityDto> cityQry = context.Cities.Select(t => new CityDto
+        {
+            Id = t.Id,
+            Name = t.Name,
+            Lat = t.Lat,
+            Lon = t.Lon,
+            Country = t.Country.Name
+        }).Take(100);
+        return await cityQry.ToListAsync();
+    }
 
     // GET: api/Cities/5
     [HttpGet("{id:int}")]

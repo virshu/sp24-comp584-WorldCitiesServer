@@ -21,7 +21,8 @@ public class CountriesController(WorldCitiesContext context) : ControllerBase
         {
             Id = c.Id,
             Name = c.Name,
-            Population = c.Cities.Sum(t => t.Population)
+            Population = c.Cities.Sum(t => t.Population),
+            CityCount = c.Cities.Count
         });
         return await countries.ToListAsync();
     }
@@ -52,7 +53,8 @@ public class CountriesController(WorldCitiesContext context) : ControllerBase
         {
             Id = c.Id,
             Name = c.Name,
-            Population = c.Cities.Sum(t => t.Population)
+            Population = c.Cities.Sum(t => t.Population),
+            CityCount = c.Cities.Count
         }).SingleAsync();
     }
 
