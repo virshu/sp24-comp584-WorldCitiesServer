@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using WorldCitiesModel;
 
-internal class JwtHandler(IConfiguration configuration, UserManager<WorldCitiesUser> userManager)
+public class JwtHandler(IConfiguration configuration, UserManager<WorldCitiesUser> userManager)
 {
     public async Task<JwtSecurityToken> GetTokenAsync(WorldCitiesUser user) =>
         new(

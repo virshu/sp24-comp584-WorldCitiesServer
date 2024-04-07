@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerApi.Data;
@@ -10,7 +11,8 @@ namespace ServerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SeedController(WorldCitiesContext db, IHostEnvironment environment) : ControllerBase
+public class SeedController(WorldCitiesContext db, IHostEnvironment environment, 
+    UserManager<WorldCitiesUser> userManager) : ControllerBase
 {
     private readonly string _pathName = Path.Combine(environment.ContentRootPath, "Data/worldcities.csv");
 
@@ -87,6 +89,28 @@ public class SeedController(WorldCitiesContext db, IHostEnvironment environment)
             await db.SaveChangesAsync();
         }
         return new JsonResult(cityCount);
+    }
+
+    [HttpPost("Users")]
+    public async Task<IActionResult> ImportUsersAsync()
+    {
+        (string name, string email) = ("user1", "comp584@csun.edu");
+        WorldCitiesUser user = new() {
+            UserName = name,
+            Email = email,
+            SecurityStamp = Guid.NewGuid().ToString()
+        };
+        if (await userManager.FindByNameAsync(name) is not null)
+        {
+            user.UserName = "user2";
+        }
+        _ = await userManager.CreateAsync(user, "P@ssw0rd!")
+            ?? throw new InvalidOperationException();
+        user.EmailConfirmed = true;
+        user.LockoutEnabled = false;
+        await db.SaveChangesAsync();
+
+        return Ok();
     }
 
 }
