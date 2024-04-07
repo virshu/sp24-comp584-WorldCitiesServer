@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace WorldCitiesModel;
 
-public class WorldCitiesContext : DbContext
+public class WorldCitiesContext : IdentityDbContext<WorldCitiesUser>
 {
     public WorldCitiesContext()
     {
@@ -14,9 +15,9 @@ public class WorldCitiesContext : DbContext
     {
     }
 
-    public virtual DbSet<City> Cities { get; set; }
+    public virtual DbSet<City> Cities { get; set; } = null!;
 
-    public virtual DbSet<Country> Countries { get; set; }
+    public virtual DbSet<Country> Countries { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -31,16 +32,18 @@ public class WorldCitiesContext : DbContext
         optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.Entity<City>(entity =>
+        // https://stackoverflow.com/a/45785019/184509
+        base.OnModelCreating(builder);
+        builder.Entity<City>(entity =>
         {
             entity.HasOne(d => d.Country).WithMany(p => p.Cities)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Cities_Countries");
         });
 
-        modelBuilder.Entity<Country>(entity =>
+        builder.Entity<Country>(entity =>
         {
             entity.Property(e => e.Iso2).IsFixedLength();
             entity.Property(e => e.Iso3).IsFixedLength();

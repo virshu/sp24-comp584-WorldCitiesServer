@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerApi.DTOs;
 using WorldCitiesModel;
@@ -25,6 +26,7 @@ public class CitiesController(WorldCitiesContext context) : ControllerBase
     }
 
     // GET: api/Cities/5
+    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<City>> GetCity(int id)
     {
