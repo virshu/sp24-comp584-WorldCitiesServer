@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ServerApi;
 using WorldCitiesModel;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -37,9 +38,7 @@ builder.Services.AddSwaggerGen(c => {
     c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, jwtSecurityScheme);
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        {
-            jwtSecurityScheme, Array.Empty<string>()
-        }
+        { jwtSecurityScheme, [] }
     });
 });
 

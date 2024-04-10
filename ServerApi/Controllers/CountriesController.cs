@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerApi.DTOs;
 using WorldCitiesModel;
@@ -41,6 +42,7 @@ public class CountriesController(WorldCitiesContext context) : ControllerBase
     }
 
     [HttpGet("Population/{id:int}")]
+    [Authorize]
     public async Task<ActionResult<CountryPopulation>> GetCountryPopulationAsync(int id)
     {
         Country? country = await context.Countries.FindAsync(id);

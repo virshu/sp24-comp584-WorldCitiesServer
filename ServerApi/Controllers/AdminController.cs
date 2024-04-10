@@ -10,7 +10,7 @@ namespace ServerApi.Controllers;
 [ApiController]
 public class AdminController(UserManager<WorldCitiesUser> userManager, JwtHandler jwtHandler) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest loginRequest)
     {
         WorldCitiesUser? user = await userManager.FindByNameAsync(loginRequest.UserName);
