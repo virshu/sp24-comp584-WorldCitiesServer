@@ -68,7 +68,7 @@ public class CountriesController(WorldCitiesContext context) : ControllerBase
 
         if (country == null)
         {
-            return NotFound();
+            return new StatusCodeResult(StatusCodes.Status418ImATeapot);
         }
 
         return country;
@@ -108,7 +108,7 @@ public class CountriesController(WorldCitiesContext context) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Country>> PostCountry(Country country)
     {
-        context.Countries.Add(country);
+        await context.Countries.AddAsync(country);
         await context.SaveChangesAsync();
 
         return CreatedAtAction("GetCountry", new { id = country.Id }, country);

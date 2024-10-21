@@ -21,8 +21,8 @@ public class SeedController(WorldCitiesContext db, IHostEnvironment environment,
     {
         // create a lookup dictionary containing all the countries already existing 
         // into the Database (it will be empty on first run).
-        Dictionary<string, Country> countriesByName = db.Countries
-            .AsNoTracking().ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, Country> countriesByName = await db.Countries
+            .AsNoTracking().ToDictionaryAsync(x => x.Name, StringComparer.OrdinalIgnoreCase);
 
         CsvConfiguration config = new(CultureInfo.InvariantCulture) {
             HasHeaderRecord = true,
@@ -65,7 +65,7 @@ public class SeedController(WorldCitiesContext db, IHostEnvironment environment,
         int cityCount = 0;
         using (StreamReader reader = new(_pathName))
         using (CsvReader csv = new(reader, config)) {
-            IEnumerable<WorldCitiesCsv>? records = csv.GetRecords<WorldCitiesCsv>();
+            IEnumerable<WorldCitiesCsv> records = csv.GetRecords<WorldCitiesCsv>();
             foreach (WorldCitiesCsv record in records) {
                 if (!countries.TryGetValue(record.country, out Country? value)) {
                     Console.WriteLine($"Not found country for {record.city}");
@@ -83,7 +83,7 @@ public class SeedController(WorldCitiesContext db, IHostEnvironment environment,
                     Population = (int)record.population.Value,
                     CountryId = value.Id
                 };
-                db.Cities.Add(city);
+                await db.Cities.AddAsync(city);
                 cityCount++;
             }
             await db.SaveChangesAsync();
