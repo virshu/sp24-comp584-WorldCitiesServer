@@ -30,13 +30,14 @@ builder.Services.AddSwaggerGen(c => {
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Description = "Please enter *only* JWT token",
-        Reference = new OpenApiReference {
+        Reference = new()
+        {
             Id = JwtBearerDefaults.AuthenticationScheme,
             Type = ReferenceType.SecurityScheme
         }
     };
     c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, jwtSecurityScheme);
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    c.AddSecurityRequirement(new()
     {
         { jwtSecurityScheme, [] }
     });

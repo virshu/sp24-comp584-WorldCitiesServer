@@ -20,11 +20,11 @@ public class JwtHandler(IConfiguration configuration, UserManager<WorldCitiesUse
     private SigningCredentials GetSigningCredentials() {
         byte[] key = Encoding.UTF8.GetBytes(configuration["JwtSettings:SecurityKey"]!);
         SymmetricSecurityKey secret = new(key);
-        return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        return new(secret, SecurityAlgorithms.HmacSha256);
     }
 
     private async Task<List<Claim>> GetClaimsAsync(WorldCitiesUser user) {
-        List<Claim> claims = [new Claim(ClaimTypes.Name, user.UserName!)];
+        List<Claim> claims = [new(ClaimTypes.Name, user.UserName!)];
         claims.AddRange(from role in await userManager.GetRolesAsync(user) select new Claim(ClaimTypes.Role, role));
         return claims;
     }
