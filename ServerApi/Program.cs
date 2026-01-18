@@ -14,8 +14,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v1", new() {
-        Contact = new() {
+    c.SwaggerDoc("v1", new()
+    {
+        Contact = new()
+        {
             Email = "frabinovich@csun.edu",
             Name = "Felix Rabinovich",
             Url = new("https://canvas.csun.edu/courses/128137")
@@ -27,22 +29,22 @@ builder.Services.AddSwaggerGen(c => {
     // Backword-incompatible change in .NET 10
     // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/docs/migrating-to-v10.md
     // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/HEAD/docs/configure-and-customize-swaggergen.md#snippet-SwaggerGen-BearerAuthentication
-    OpenApiSecurityScheme jwtSecurityScheme = new() {
+    OpenApiSecurityScheme jwtSecurityScheme = new()
+    {
         Name = "JWT Authentication",
         Type = SecuritySchemeType.Http,
         Scheme = JwtBearerDefaults.AuthenticationScheme,
         BearerFormat = "JWT",
         Description = "Please enter *only* JWT token"
     };
-    
     c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, jwtSecurityScheme);
     c.AddSecurityRequirement(doc => new()
     {
-        [new(JwtBearerDefaults.AuthenticationScheme, doc)] = []
+        { jwtSecurityScheme, [] }
     });
-
 });
 
+});
 builder.Services.AddDbContext<WorldCitiesContext>(optionsBuilder =>
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
