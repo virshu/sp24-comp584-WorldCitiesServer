@@ -40,11 +40,10 @@ builder.Services.AddSwaggerGen(c => {
     c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, jwtSecurityScheme);
     c.AddSecurityRequirement(doc => new()
     {
-        { jwtSecurityScheme, [] }
+        [new(JwtBearerDefaults.AuthenticationScheme, doc)] = []
     });
 });
 
-});
 builder.Services.AddDbContext<WorldCitiesContext>(optionsBuilder =>
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
