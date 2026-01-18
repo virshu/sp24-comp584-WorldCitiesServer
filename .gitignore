@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /WorldCitiesModel/appsettings.json
 /ServerApi/appsettings.Production.json
+/ServerApi/appsettings.Development.json
