@@ -25,6 +25,19 @@ public class CitiesController(WorldCitiesContext context) : ControllerBase
         return await cityQry.ToListAsync();
     }
 
+    [HttpGet("country/{id:int}")]
+    public async Task<ActionResult<IEnumerable<CityDto>>> GetCitiesInCountry(int id)
+    {
+        IQueryable<CityDto> cityQry = context.Cities.Where(t => t.CountryId == id).Select(t => new CityDto
+        {
+            Id = t.Id,
+            Name = t.Name,
+            Lat = t.Lat,
+            Lon = t.Lon,
+            Country = t.Country.Name
+        }).OrderBy(t => t.Name);
+        return await cityQry.ToListAsync();
+    }
     // GET: api/Cities/5
     [Authorize]
     [HttpGet("{id:int}")]

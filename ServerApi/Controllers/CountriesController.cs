@@ -62,7 +62,7 @@ public class CountriesController(WorldCitiesContext context) : ControllerBase
 
     // GET: api/Countries/5
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Country>> GetCountry(int id)
+    public async Task<ActionResult<CountryDto>> GetCountry(int id)
     {
         Country? country = await context.Countries.FindAsync(id);
 
@@ -71,7 +71,13 @@ public class CountriesController(WorldCitiesContext context) : ControllerBase
             return new StatusCodeResult(StatusCodes.Status418ImATeapot);
         }
 
-        return country;
+        return new CountryDto()
+        {
+            Id = country.Id,
+            Name = country.Name,
+            Iso2 = country.Iso2,
+            Iso3 = country.Iso3
+        };
     }
 
     // PUT: api/Countries/5
